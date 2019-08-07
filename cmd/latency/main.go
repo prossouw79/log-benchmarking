@@ -12,14 +12,18 @@ import (
 
 func main() {
 	var (
-		system      = flag.String("s", "", "[kafka, nats]")
-		rate        = flag.Uint64("r", 1400, "requests per second")
-		size        = flag.Int("sz", 200, "message size")
-		duration    = flag.Duration("d", 30*time.Second, "benchmark runtime")
+		system      = flag.String("s", "nats", "[kafka, nats]")
+		rate        = flag.Uint64("r", 5000, "requests per second")
+		size        = flag.Int("sz", 2048, "message size")
+		duration    = flag.Duration("d", 15*time.Second, "benchmark runtime")
 		connections = flag.Uint64("c", 1, "connections")
-		url         = flag.String("url", "", "broker url")
+		url         = flag.String("url", "nats://localhost:4223", "broker url")
 	)
 	flag.Parse()
+
+	fmt.Println(fmt.Sprintf("Running %s at %s", *system, *url))
+	fmt.Println(fmt.Sprintf("Running %d bytes @ %d requests/s with %d connection(s)", *size, *rate, *connections))
+	fmt.Println(fmt.Sprintf("Running for %d seconds", *duration/1000000000))
 
 	var factory bench.RequesterFactory
 
@@ -47,7 +51,7 @@ func main() {
 func run(factory bench.RequesterFactory, rate, conns uint64, duration time.Duration,
 	output string) {
 
-	benchmark := bench.NewBenchmark(factory, rate, conns, duration)
+	benchmark := bench.NewBenchmark(factory, rate, conns, duration, 100)
 	summary, err := benchmark.Run()
 	if err != nil {
 		panic(err)

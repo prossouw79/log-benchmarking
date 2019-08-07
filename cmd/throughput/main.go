@@ -19,10 +19,10 @@ type Benchmark interface {
 
 func main() {
 	var (
-		system      = flag.String("s", "", "[kafka, nats]")
-		size        = flag.Uint("sz", 200, "message size")
-		numMessages = flag.Uint("n", 50000, "number of messages")
-		url         = flag.String("url", "", "broker url")
+		system      = flag.String("s", "nats", "[kafka, nats]")
+		size        = flag.Uint("sz", 204800, "message size")
+		numMessages = flag.Uint("n", 1000000, "number of messages")
+		url         = flag.String("url", "nats://localhost:4223", "broker url")
 		consumer    = flag.Bool("consumer", false, "Consumer or producer")
 	)
 	flag.Parse()
